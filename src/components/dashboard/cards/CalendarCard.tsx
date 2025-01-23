@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { DateCalendar } from "@mui/x-date-pickers";
 
 interface CalendarCardProps {
   selectedDate?: Date;
