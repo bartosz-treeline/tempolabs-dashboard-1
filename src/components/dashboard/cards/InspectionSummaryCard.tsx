@@ -1,9 +1,20 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckCircle2, AlertCircle, Clock } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+  LinearProgress,
+  Box,
+  Chip,
+  Stack,
+  IconButton,
+} from "@mui/material";
+import {
+  CheckCircle as CheckCircleIcon,
+  AccessTime as ClockIcon,
+  Warning as AlertCircleIcon,
+} from "@mui/icons-material";
 
 interface InspectionItem {
   id: string;
@@ -52,11 +63,11 @@ const defaultInspections: InspectionItem[] = [
 const StatusIcon = ({ status }: { status: InspectionItem["status"] }) => {
   switch (status) {
     case "completed":
-      return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+      return <CheckCircleIcon sx={{ color: "success.main" }} />;
     case "pending":
-      return <Clock className="h-4 w-4 text-yellow-500" />;
+      return <ClockIcon sx={{ color: "warning.main" }} />;
     case "overdue":
-      return <AlertCircle className="h-4 w-4 text-red-500" />;
+      return <AlertCircleIcon sx={{ color: "error.main" }} />;
   }
 };
 
@@ -65,58 +76,75 @@ const InspectionSummaryCard = ({
   completionRate = 65,
 }: InspectionSummaryCardProps) => {
   return (
-    <Card className="w-full h-full bg-background">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-xl font-semibold">
-          Inspection Summary
-        </CardTitle>
-        <div className="mt-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-muted-foreground">
+    <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <CardHeader
+        title="Inspection Summary"
+        titleTypography={{ variant: "h6" }}
+      />
+      <CardContent
+        sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 3 }}
+      >
+        <Box>
+          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+            <Typography variant="body2" color="text.secondary">
               Completion Rate
-            </span>
-            <span className="text-sm font-medium">{completionRate}%</span>
-          </div>
-          <Progress value={completionRate} className="h-2" />
-        </div>
-      </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-[300px] pr-4">
-          <div className="space-y-4">
-            {inspections.map((inspection) => (
-              <div
-                key={inspection.id}
-                className="flex items-center justify-between p-3 bg-muted rounded-lg"
-              >
-                <div className="flex items-center space-x-3">
-                  <StatusIcon status={inspection.status} />
-                  <div>
-                    <p className="text-sm font-medium">{inspection.property}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {inspection.date}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  {inspection.status === "completed" && (
-                    <Badge variant="secondary">{inspection.score}%</Badge>
-                  )}
-                  <Badge
-                    variant={
-                      {
-                        completed: "default",
-                        pending: "secondary",
-                        overdue: "destructive",
-                      }[inspection.status]
-                    }
-                  >
-                    {inspection.status}
-                  </Badge>
-                </div>
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
+            </Typography>
+            <Typography variant="body2">{completionRate}%</Typography>
+          </Box>
+          <LinearProgress
+            variant="determinate"
+            value={completionRate}
+            sx={{ height: 8, borderRadius: 1 }}
+          />
+        </Box>
+
+        <Stack spacing={2} sx={{ flex: 1, overflow: "auto" }}>
+          {inspections.map((inspection) => (
+            <Box
+              key={inspection.id}
+              sx={{
+                p: 2,
+                borderRadius: 1,
+                bgcolor: "background.paper",
+                boxShadow: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <StatusIcon status={inspection.status} />
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Typography variant="subtitle2" noWrap>
+                  {inspection.property}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {inspection.date}
+                </Typography>
+              </Box>
+              <Stack direction="row" spacing={1} alignItems="center">
+                {inspection.status === "completed" && (
+                  <Chip
+                    size="small"
+                    label={`${inspection.score}%`}
+                    color="primary"
+                    variant="outlined"
+                  />
+                )}
+                <Chip
+                  size="small"
+                  label={inspection.status}
+                  color={
+                    {
+                      completed: "success",
+                      pending: "warning",
+                      overdue: "error",
+                    }[inspection.status]
+                  }
+                />
+              </Stack>
+            </Box>
+          ))}
+        </Stack>
       </CardContent>
     </Card>
   );

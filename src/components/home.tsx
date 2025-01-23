@@ -1,4 +1,5 @@
 import React from "react";
+import { Box } from "@mui/material";
 import TopNavBar from "./dashboard/TopNavBar";
 import DashboardGrid from "./dashboard/DashboardGrid";
 
@@ -9,12 +10,26 @@ interface HomeProps {
 
 const Home = ({ isDarkMode = false, onThemeToggle = () => {} }: HomeProps) => {
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-[1440px] mx-auto space-y-6">
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "background.default",
+        p: 3,
+      }}
+    >
+      <Box
+        sx={{
+          maxWidth: 1440,
+          mx: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 3,
+        }}
+      >
         <TopNavBar isDarkMode={isDarkMode} onThemeToggle={onThemeToggle} />
-        <DashboardGrid className="h-[calc(100vh-120px)]" />
-      </div>
-    </div>
+        <DashboardGrid />
+      </Box>
+    </Box>
   );
 };
 

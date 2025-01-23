@@ -1,11 +1,24 @@
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Paperclip } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+  Avatar,
+  Box,
+  Divider,
+  ButtonGroup,
+  Stack,
+} from "@mui/material";
+import {
+  Send as SendIcon,
+  AttachFile as AttachFileIcon,
+  CalendarMonth as CalendarIcon,
+  ContactMail as ContactIcon,
+  NotificationsActive as ReminderIcon,
+  Assignment as ProjectIcon,
+} from "@mui/icons-material";
 
 interface Message {
   id: number;
@@ -44,10 +57,17 @@ const defaultMessages: Message[] = [
   },
 ];
 
+const quickActions = [
+  { icon: <CalendarIcon />, label: "Create an Event" },
+  { icon: <ContactIcon />, label: "Add a Contact" },
+  { icon: <ReminderIcon />, label: "Set a Reminder" },
+  { icon: <ProjectIcon />, label: "Start a Project" },
+];
+
 const AIChatbotCard = () => {
+  const [messages] = useState<Message[]>(defaultMessages);
   const [inputMessage, setInputMessage] = useState("");
-  const currentDate = new Date();
-  const formattedDate = currentDate.toLocaleDateString("en-US", {
+  const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -55,75 +75,146 @@ const AIChatbotCard = () => {
   });
 
   return (
-    <Card className="h-full bg-background flex flex-col p-6">
-      <div className="flex flex-col items-center gap-4 mb-6">
-        <Avatar className="h-16 w-16 rounded-full bg-primary/10">
-          <AvatarImage src="https://api.dicebear.com/7.x/bottts/svg?seed=house" />
-        </Avatar>
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-1">Good afternoon, Jessie</h2>
-          <p className="text-sm text-muted-foreground">{formattedDate}</p>
-        </div>
-      </div>
+    <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <CardContent
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 3,
+          height: "100%",
+          p: 3,
+        }}
+      >
+        {/* Header */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Avatar
+            sx={{ width: 64, height: 64, bgcolor: "primary.main" }}
+            src="https://api.dicebear.com/7.x/bottts/svg?seed=house"
+          />
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="h6" gutterBottom>
+              Good afternoon, Jessie
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {currentDate}
+            </Typography>
+          </Box>
+        </Box>
 
-      <Separator className="mb-6" />
+        <Divider />
 
-      <ScrollArea className="flex-grow mb-6 pr-4">
-        <div className="space-y-4">
-          {defaultMessages.map((message) => (
-            <div
+        {/* Messages */}
+        <Box
+          sx={{
+            flex: 1,
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            pr: 1,
+          }}
+        >
+          {messages.map((message) => (
+            <Box
               key={message.id}
-              className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}
+              sx={{
+                display: "flex",
+                justifyContent:
+                  message.type === "user" ? "flex-end" : "flex-start",
+              }}
             >
-              <div
-                className={`max-w-[80%] rounded-2xl px-4 py-2 ${message.type === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}
+              <Box
+                sx={{
+                  maxWidth: "80%",
+                  p: 2,
+                  borderRadius: 3,
+                  bgcolor:
+                    message.type === "user" ? "primary.main" : "action.hover",
+                  color:
+                    message.type === "user"
+                      ? "primary.contrastText"
+                      : "text.primary",
+                }}
               >
-                {message.content}
-              </div>
-            </div>
+                <Typography variant="body2">{message.content}</Typography>
+              </Box>
+            </Box>
           ))}
-        </div>
-      </ScrollArea>
+        </Box>
 
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <Button
-          variant="outline"
-          className="h-16 whitespace-normal text-center"
+        {/* Quick Actions */}
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{
+            flexWrap: "wrap",
+            gap: 2,
+            "& > *": { flex: "1 1 calc(50% - 8px)" },
+          }}
         >
-          Create an Event
-        </Button>
-        <Button
-          variant="outline"
-          className="h-16 whitespace-normal text-center"
-        >
-          Add a Contact
-        </Button>
-        <Button
-          variant="outline"
-          className="h-16 whitespace-normal text-center"
-        >
-          Set a Reminder
-        </Button>
-        <Button
-          variant="outline"
-          className="h-16 whitespace-normal text-center"
-        >
-          Start a Project
-        </Button>
-      </div>
+          {quickActions.map((action, index) => (
+            <Button
+              key={index}
+              variant="outlined"
+              startIcon={action.icon}
+              sx={{
+                height: 64,
+                justifyContent: "flex-start",
+                textAlign: "left",
+                whiteSpace: "normal",
+              }}
+            >
+              {action.label}
+            </Button>
+          ))}
+        </Stack>
 
-      <div className="relative">
-        <p className="absolute left-4 top-2 text-sm text-muted-foreground">
-          Message Hauser
-        </p>
-        <Paperclip className="absolute right-3 top-3 h-5 w-5 text-muted-foreground" />
-        <Input
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          className="min-h-[100px] pl-4 pr-10 pt-8 pb-2 resize-none"
-          multiline
-        />
-      </div>
+        {/* Input */}
+        <Box sx={{ position: "relative", mt: 2 }}>
+          <Typography
+            variant="caption"
+            sx={{
+              position: "absolute",
+              left: 1.5,
+              top: 1,
+              color: "text.secondary",
+            }}
+          >
+            Message Hauser
+          </Typography>
+          <TextField
+            fullWidth
+            multiline
+            minRows={3}
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            sx={{
+              "& .MuiInputBase-root": {
+                pt: 4,
+              },
+            }}
+            InputProps={{
+              endAdornment: (
+                <Box sx={{ display: "flex", gap: 1, p: 1 }}>
+                  <IconButton size="small">
+                    <AttachFileIcon />
+                  </IconButton>
+                  <IconButton size="small" color="primary">
+                    <SendIcon />
+                  </IconButton>
+                </Box>
+              ),
+            }}
+          />
+        </Box>
+      </CardContent>
     </Card>
   );
 };

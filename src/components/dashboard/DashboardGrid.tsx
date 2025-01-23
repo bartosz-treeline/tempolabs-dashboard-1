@@ -1,4 +1,5 @@
 import React from "react";
+import { Box, Grid } from "@mui/material";
 import AIChatbotCard from "./cards/AIChatbotCard";
 import InspectionSummaryCard from "./cards/InspectionSummaryCard";
 import CalendarCard from "./cards/CalendarCard";
@@ -12,39 +13,46 @@ interface DashboardGridProps {
 
 const DashboardGrid = ({ className = "" }: DashboardGridProps) => {
   return (
-    <div className={`w-full h-full bg-background p-6 ${className}`}>
-      <div className="grid grid-cols-4 gap-6 h-full">
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        bgcolor: "background.default",
+        p: 3,
+      }}
+    >
+      <Grid container spacing={3} sx={{ height: "100%" }}>
         {/* AI Chatbot - 2x1 spanning both rows in first column */}
-        <div className="row-span-2">
+        <Grid item xs={12} md={3} sx={{ height: "100%" }}>
           <AIChatbotCard />
-        </div>
+        </Grid>
 
         {/* Inspection Summary - 1x2 spanning columns 2-3 in first row */}
-        <div className="col-span-2 h-full">
+        <Grid item xs={12} md={6}>
           <InspectionSummaryCard />
-        </div>
+        </Grid>
 
         {/* Calendar - 1x1 in column 4, row 1 */}
-        <div className="h-full">
+        <Grid item xs={12} md={3}>
           <CalendarCard />
-        </div>
+        </Grid>
 
         {/* Recommendations - 1x1 in column 2, row 2 */}
-        <div>
+        <Grid item xs={12} md={3}>
           <RecommendationsCard />
-        </div>
+        </Grid>
 
         {/* Records - 1x1 in column 3, row 2 */}
-        <div>
+        <Grid item xs={12} md={3}>
           <RecordsCard />
-        </div>
+        </Grid>
 
         {/* Directory - 1x1 in column 4, row 2 */}
-        <div>
+        <Grid item xs={12} md={3}>
           <DirectoryCard />
-        </div>
-      </div>
-    </div>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

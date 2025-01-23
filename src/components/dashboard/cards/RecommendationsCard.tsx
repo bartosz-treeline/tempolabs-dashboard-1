@@ -1,7 +1,17 @@
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+  Box,
+  IconButton,
+  Stack,
+} from "@mui/material";
+import {
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+} from "@mui/icons-material";
 
 interface Recommendation {
   id: number;
@@ -58,34 +68,48 @@ const RecommendationsCard = () => {
   };
 
   return (
-    <Card className="w-full h-full bg-background p-6 flex flex-col">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold">Recommendations</h2>
-        <div className="flex gap-2">
-          <Button variant="ghost" size="icon" onClick={handlePrevious}>
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={handleNext}>
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-col items-start flex-grow">
-        <div className="w-16 h-16 mb-6 rounded border border-border p-2">
-          <img
-            src={currentRecommendation.iconUrl}
-            alt={currentRecommendation.title}
-            className="w-full h-full"
-          />
-        </div>
-        <h3 className="text-lg font-semibold mb-3">
-          {currentRecommendation.title}
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          {currentRecommendation.description}
-        </p>
-      </div>
+    <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <CardHeader
+        title="Recommendations"
+        titleTypography={{ variant: "h6" }}
+        action={
+          <Stack direction="row" spacing={1}>
+            <IconButton size="small" onClick={handlePrevious}>
+              <ChevronLeftIcon />
+            </IconButton>
+            <IconButton size="small" onClick={handleNext}>
+              <ChevronRightIcon />
+            </IconButton>
+          </Stack>
+        }
+      />
+      <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+          <Box
+            sx={{
+              width: 64,
+              height: 64,
+              mb: 3,
+              borderRadius: 1,
+              border: 1,
+              borderColor: "divider",
+              p: 1,
+            }}
+          >
+            <img
+              src={currentRecommendation.iconUrl}
+              alt={currentRecommendation.title}
+              style={{ width: "100%", height: "100%" }}
+            />
+          </Box>
+          <Typography variant="h6" gutterBottom>
+            {currentRecommendation.title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ flex: 1 }}>
+            {currentRecommendation.description}
+          </Typography>
+        </Box>
+      </CardContent>
     </Card>
   );
 };

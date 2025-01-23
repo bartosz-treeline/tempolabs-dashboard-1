@@ -1,31 +1,30 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
-import { Switch } from "@/components/ui/switch";
-import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
   Menu,
-  Bell,
-  Sun,
-  Moon,
-  ChevronDown,
+  MenuItem,
+  Box,
+  Avatar,
+  Switch,
+  Tooltip,
+  Badge,
+} from "@mui/material";
+import {
+  Menu as MenuIcon,
+  Notifications as NotificationsIcon,
+  LightMode as SunIcon,
+  DarkMode as MoonIcon,
   Home as HomeIcon,
-  HelpCircle,
-  UserCircle,
-  LogOut,
-  UserPlus,
-} from "lucide-react";
+  HelpOutline as HelpIcon,
+  PersonAdd as UserPlusIcon,
+  AccountCircle as UserCircleIcon,
+  Logout as LogOutIcon,
+  KeyboardArrowDown as ChevronDownIcon,
+} from "@mui/icons-material";
 
 interface Location {
   id: string;
@@ -91,111 +90,172 @@ const TopNavBar = ({
   onThemeToggle = () => {},
   isDarkMode = false,
 }: TopNavBarProps) => {
+  const [mainMenuAnchor, setMainMenuAnchor] =
+    React.useState<null | HTMLElement>(null);
+  const [locationMenuAnchor, setLocationMenuAnchor] =
+    React.useState<null | HTMLElement>(null);
+  const [notificationMenuAnchor, setNotificationMenuAnchor] =
+    React.useState<null | HTMLElement>(null);
+
+  const handleMainMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMainMenuAnchor(event.currentTarget);
+  };
+
+  const handleLocationMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setLocationMenuAnchor(event.currentTarget);
+  };
+
+  const handleNotificationMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setNotificationMenuAnchor(event.currentTarget);
+  };
+
   return (
-    <div className="w-full h-[48px] px-4 bg-background flex items-center justify-between rounded-[24px] border">
-      <div className="flex items-center space-x-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Menu className="h-6 w-6" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
-            <DropdownMenuItem>
-              <HomeIcon className="mr-2 h-4 w-4" />
-              <span>Home</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <HelpCircle className="mr-2 h-4 w-4" />
-              <span>Support</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Bell className="mr-2 h-4 w-4" />
-              <span>Notifications</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <UserPlus className="mr-2 h-4 w-4" />
-              <span>Invite a Friend</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <UserCircle className="mr-2 h-4 w-4" />
-              <span>My Account</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-600">
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Log Out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <span className="font-semibold text-xl hidden sm:inline">Hauser</span>
-      </div>
+    <AppBar
+      position="static"
+      color="default"
+      elevation={1}
+      sx={{ borderRadius: 3 }}
+    >
+      <Toolbar sx={{ minHeight: 48 }}>
+        {/* Left section */}
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={handleMainMenuOpen}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography
+          variant="h6"
+          sx={{ ml: 2, display: { xs: "none", sm: "block" } }}
+        >
+          Hauser
+        </Typography>
 
-      <div className="flex-1 max-w-md mx-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="w-full justify-center rounded-full"
-              role="combobox"
+        {/* Location selector */}
+        <Button
+          sx={{
+            mx: "auto",
+            maxWidth: 400,
+            textTransform: "none",
+            borderRadius: 50,
+          }}
+          variant="outlined"
+          onClick={handleLocationMenuOpen}
+          endIcon={<ChevronDownIcon />}
+        >
+          {selectedLocation.name}
+        </Button>
+
+        {/* Right section */}
+        <Box sx={{ ml: "auto", display: "flex", alignItems: "center", gap: 2 }}>
+          <IconButton color="inherit" onClick={handleNotificationMenuOpen}>
+            <Badge
+              color="error"
+              variant="dot"
+              invisible={!defaultNotifications.some((n) => !n.read)}
             >
-              <span className="truncate">{selectedLocation.name}</span>
-              <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)]">
-            {locations.map((location) => (
-              <DropdownMenuItem
-                key={location.id}
-                onClick={() => onLocationChange(location)}
-              >
-                <div className="flex flex-col">
-                  <span>{location.name}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {location.address}
-                  </span>
-                </div>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
 
-      <div className="flex items-center space-x-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5" />
-              {defaultNotifications.some((n) => !n.read) && (
-                <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />
-              )}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
-            {defaultNotifications.map((notification) => (
-              <DropdownMenuItem
-                key={notification.id}
-                className="flex flex-col items-start py-2"
-              >
-                <div className="font-medium">{notification.title}</div>
-                <div className="text-sm text-muted-foreground">
-                  {notification.description}
-                </div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  {notification.time}
-                </div>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <SunIcon fontSize="small" />
+            <Switch
+              checked={isDarkMode}
+              onChange={onThemeToggle}
+              size="small"
+            />
+            <MoonIcon fontSize="small" />
+          </Box>
+        </Box>
 
-        <div className="flex items-center space-x-2">
-          <Sun className="h-4 w-4" />
-          <Switch checked={isDarkMode} onCheckedChange={onThemeToggle} />
-          <Moon className="h-4 w-4" />
-        </div>
-      </div>
-    </div>
+        {/* Menus */}
+        <Menu
+          anchorEl={mainMenuAnchor}
+          open={Boolean(mainMenuAnchor)}
+          onClose={() => setMainMenuAnchor(null)}
+        >
+          <MenuItem onClick={() => setMainMenuAnchor(null)}>
+            <HomeIcon fontSize="small" sx={{ mr: 1 }} /> Home
+          </MenuItem>
+          <MenuItem onClick={() => setMainMenuAnchor(null)}>
+            <HelpIcon fontSize="small" sx={{ mr: 1 }} /> Support
+          </MenuItem>
+          <MenuItem onClick={() => setMainMenuAnchor(null)}>
+            <NotificationsIcon fontSize="small" sx={{ mr: 1 }} /> Notifications
+          </MenuItem>
+          <MenuItem onClick={() => setMainMenuAnchor(null)}>
+            <UserPlusIcon fontSize="small" sx={{ mr: 1 }} /> Invite a Friend
+          </MenuItem>
+          <MenuItem onClick={() => setMainMenuAnchor(null)}>
+            <UserCircleIcon fontSize="small" sx={{ mr: 1 }} /> My Account
+          </MenuItem>
+          <MenuItem
+            onClick={() => setMainMenuAnchor(null)}
+            sx={{ color: "error.main" }}
+          >
+            <LogOutIcon fontSize="small" sx={{ mr: 1 }} /> Log Out
+          </MenuItem>
+        </Menu>
+
+        <Menu
+          anchorEl={locationMenuAnchor}
+          open={Boolean(locationMenuAnchor)}
+          onClose={() => setLocationMenuAnchor(null)}
+          PaperProps={{
+            sx: { width: locationMenuAnchor?.offsetWidth },
+          }}
+        >
+          {locations.map((location) => (
+            <MenuItem
+              key={location.id}
+              onClick={() => {
+                onLocationChange(location);
+                setLocationMenuAnchor(null);
+              }}
+            >
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Typography variant="body1">{location.name}</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {location.address}
+                </Typography>
+              </Box>
+            </MenuItem>
+          ))}
+        </Menu>
+
+        <Menu
+          anchorEl={notificationMenuAnchor}
+          open={Boolean(notificationMenuAnchor)}
+          onClose={() => setNotificationMenuAnchor(null)}
+          PaperProps={{
+            sx: { width: 320 },
+          }}
+        >
+          {defaultNotifications.map((notification) => (
+            <MenuItem
+              key={notification.id}
+              onClick={() => setNotificationMenuAnchor(null)}
+              sx={{ flexDirection: "column", alignItems: "flex-start", py: 1 }}
+            >
+              <Typography variant="body1">{notification.title}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {notification.description}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ mt: 0.5 }}
+              >
+                {notification.time}
+              </Typography>
+            </MenuItem>
+          ))}
+        </Menu>
+      </Toolbar>
+    </AppBar>
   );
 };
 
