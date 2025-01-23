@@ -37,6 +37,14 @@ const DashboardGrid = ({ className = "" }: DashboardGridProps) => {
           <CalendarCard />
         </Grid>
 
+        {/* Empty first column in second row (taken by AI Chatbot) */}
+        <Grid
+          item
+          xs={12}
+          md={3}
+          sx={{ display: { xs: "none", md: "block" } }}
+        />
+
         {/* Recommendations - 1x1 in column 2, row 2 */}
         <Grid item xs={12} md={3}>
           <RecommendationsCard />
