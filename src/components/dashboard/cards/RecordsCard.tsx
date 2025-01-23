@@ -1,9 +1,20 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { FileText, Folder, Plus, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+  Box,
+  IconButton,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
+import {
+  Search as SearchIcon,
+  Add as AddIcon,
+  Folder as FolderIcon,
+  Description as FileIcon,
+} from "@mui/icons-material";
 
 interface FileItem {
   id: string;
@@ -64,42 +75,105 @@ const defaultItems: FileItem[] = [
 
 const RecordsCard = ({ items = defaultItems }: RecordsCardProps) => {
   return (
-    <Card className="w-full h-full bg-background">
-      <CardHeader className="space-y-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-xl font-semibold">Records</CardTitle>
-          <Button size="icon" variant="ghost">
-            <Plus className="h-4 w-4" />
-          </Button>
-        </div>
-        <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search files..." className="pl-8" />
-        </div>
-      </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-[280px]">
-          <div className="grid grid-cols-2 gap-2">
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center p-2 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group"
-              >
-                {item.type === "folder" ? (
-                  <Folder className="h-5 w-5 text-muted-foreground mr-2 flex-shrink-0" />
-                ) : (
-                  <FileText className="h-5 w-5 text-muted-foreground mr-2 flex-shrink-0" />
+    <Card
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        bgcolor: "background.paper",
+      }}
+    >
+      <CardHeader
+        title={
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h6">Records</Typography>
+            <IconButton size="small">
+              <AddIcon fontSize="small" />
+            </IconButton>
+          </Box>
+        }
+      />
+      <CardContent sx={{ p: 2, pt: 0 }}>
+        <TextField
+          size="small"
+          placeholder="Search files..."
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" color="action" />
+              </InputAdornment>
+            ),
+          }}
+          sx={{ mb: 2 }}
+        />
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: 1,
+            maxHeight: 280,
+            overflow: "auto",
+            pr: 1,
+            "&::-webkit-scrollbar": {
+              width: "8px",
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "transparent",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "action.hover",
+              borderRadius: "4px",
+            },
+          }}
+        >
+          {items.map((item) => (
+            <Box
+              key={item.id}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                p: 1.5,
+                borderRadius: 1,
+                transition: "background-color 0.2s",
+                "&:hover": {
+                  bgcolor: "action.hover",
+                },
+                cursor: "pointer",
+              }}
+            >
+              {item.type === "folder" ? (
+                <FolderIcon
+                  sx={{ color: "action.active", mr: 1, fontSize: 20 }}
+                />
+              ) : (
+                <FileIcon
+                  sx={{ color: "action.active", mr: 1, fontSize: 20 }}
+                />
+              )}
+              <Box sx={{ minWidth: 0, flex: 1 }}>
+                <Typography variant="body2" noWrap>
+                  {item.name}
+                </Typography>
+                {item.date && (
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    display="block"
+                  >
+                    {item.date}
+                  </Typography>
                 )}
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium truncate">{item.name}</p>
-                  {item.date && (
-                    <p className="text-xs text-muted-foreground">{item.date}</p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
+              </Box>
+            </Box>
+          ))}
+        </Box>
       </CardContent>
     </Card>
   );
