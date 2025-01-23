@@ -13,54 +13,40 @@ interface DashboardGridProps {
 
 const DashboardGrid = ({ className = "" }: DashboardGridProps) => {
   return (
-    <Box
-      sx={{
-        width: "100%",
-        height: "100%",
-        bgcolor: "background.default",
-        p: 3,
-      }}
-    >
-      <Grid container spacing={3} sx={{ height: "100%" }}>
-        {/* AI Chatbot - 2x1 spanning both rows in first column */}
-        <Grid item xs={12} md={3} sx={{ height: "100%" }}>
+    <Grid container spacing={3}>
+      <Grid item xs={12} md={3}>
+        <Grid container>
           <AIChatbotCard />
         </Grid>
+      </Grid>
 
-        {/* Inspection Summary - 1x2 spanning columns 2-3 in first row */}
-        <Grid item xs={12} md={6}>
-          <InspectionSummaryCard />
-        </Grid>
+      <Grid item xs={12} md={6}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={12}>
+            <InspectionSummaryCard />
+          </Grid>
 
-        {/* Calendar - 1x1 in column 4, row 1 */}
-        <Grid item xs={12} md={3}>
-          <CalendarCard />
-        </Grid>
+          <Grid item xs={12} md={6}>
+            <RecommendationsCard />
+          </Grid>
 
-        {/* Empty first column in second row (taken by AI Chatbot) */}
-        <Grid
-          item
-          xs={12}
-          md={3}
-          sx={{ display: { xs: "none", md: "block" } }}
-        />
-
-        {/* Recommendations - 1x1 in column 2, row 2 */}
-        <Grid item xs={12} md={3}>
-          <RecommendationsCard />
-        </Grid>
-
-        {/* Records - 1x1 in column 3, row 2 */}
-        <Grid item xs={12} md={3}>
-          <RecordsCard />
-        </Grid>
-
-        {/* Directory - 1x1 in column 4, row 2 */}
-        <Grid item xs={12} md={3}>
-          <DirectoryCard />
+          <Grid item xs={12} md={6}>
+            <RecordsCard />
+          </Grid>
         </Grid>
       </Grid>
-    </Box>
+
+      <Grid item xs={12} md={3}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={12}>
+            <CalendarCard />
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <DirectoryCard />
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 
